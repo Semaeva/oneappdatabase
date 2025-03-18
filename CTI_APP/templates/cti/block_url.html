@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Координационный Центр по Обеспечению Кибербезопасности</title>
+  <link rel="stylesheet" href="{% static 'css/block_list_url.css' %}">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo-and-search">
+      <div class="block-logo-text">
+        <a href="/" class="logo-link">
+          <img src="{% static 'images/logo.png' %}" alt="logo" class="logo-img">
+        </a>
+        <p>Координационный центр<br>по обеспечению кибербезопасности<br>ГКНБ Кыргызской Республики</p>
+      </div>
+      <div class="search-exit">
+        <form method="get" action="." class="search-form">
+          <input type="text" name="search_query" placeholder="Поиск...">
+          <button type="submit">Поиск</button>
+        </form>
+        <div style="padding-top: 35px"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Единая база данных киберугроз</h1>
+    <p>Список URL-адресов, представляющих угрозу.</p>
+  </section>
+
+  <section class="cta-section">
+    <a href="/" class="accent-button">Сигнатуры</a>
+    <a href="/ip" class="accent-button">Black List IP</a>
+    <a href="/url" class="accent-button">Black List URL</a>
+  </section>
+
+  <section class="table-section">
+    {% if page_obj %}
+      <table>
+        <thead>
+          <tr>
+            <th>IP-адрес</th>
+            <!-- <th>Страна</th> -->
+            <th>Дата</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ip in page_obj %}
+            <tr>
+              <td>{{ ip.url_source }}</td>
+              <!-- <td>{{ ip. }}</td> -->
+              <td>{{ ip.attack_date }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>Нет данных для отображения.</p>
+    {% endif %}
+  </section>
+</main>
+<a href="{% url 'export_url_csv' %}" class="download-button">Скачать CSV</a>
+
+<div class="pagination">
+  <span class="step-links">
+    {% if page_obj.has_previous %}
+      <a href="?page=1&search_query={{ search_query }}">&laquo; Первая</a>
+      <a href="?page={{ page_obj.previous_page_number }}&search_query={{ search_query }}">Предыдущая</a>
+    {% endif %}
+
+    <span class="current">
+      Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}&search_query={{ search_query }}">Следующая</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}&search_query={{ search_query }}">Последняя &raquo;</a>
+    {% endif %}
+  </span>
+</div>
+
+
+
+<footer>
+  <p>© 2024 CTI. Все права защищены.</p>
+</footer>
+
+<script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

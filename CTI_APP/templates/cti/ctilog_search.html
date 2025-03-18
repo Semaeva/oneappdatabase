@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поиск по базе данных киберугроз</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <!-- Поисковая форма -->
+  <section class="search-form-section">
+    <form method="get" action="{% url 'ctilog_search' %}">
+      {{ form.as_p }}
+      <button type="submit">Поиск</button>
+    </form>
+  </section>
+
+  <!-- Таблица с результатами поиска -->
+  <section class="table-section">
+    {% if page_obj %}
+    <table>
+      <thead>
+        <tr>
+          <th>IP Источник</th>
+          <th>Дата появления</th>
+          <th>CVE</th>
+          <th>Сигнатура</th>
+          <th>Описание</th>
+          <th>Страна источник</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in page_obj %}
+        <tr class="log-row" data-description="{{ log.description }}" data-response="{{ log.response_measures }}">
+          <td>{{ log.ip_source }}</td>
+          <td>{{ log.attack_date }}</td>
+          <td>{{ log.cve }}</td>
+          <td>{{ log.signature|default:"None" }}</td>
+          <td>{{ log.description|slice:":50" }}...</td>
+          <td>{{ log.country_source }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Пагинация -->
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page=1&search_query={{ search_query }}">&laquo; Первая</a>
+        <a href="?page={{ page_obj.previous_page_number }}&search_query={{ search_query }}">Предыдущая</a>
+      {% endif %}
+
+      <span class="current">
+        Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+      </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&search_query={{ search_query }}">Следующая</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}&search_query={{ search_query }}">Последняя &raquo;</a>
+      {% endif %}
+    </div>
+
+    {% else %}
+    <p>Нет результатов для отображения.</p>
+    {% endif %}
+  </section>
+
+  <!-- Подключаем скрипт модального окна -->
+  <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
