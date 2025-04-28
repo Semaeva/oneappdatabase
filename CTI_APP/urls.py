@@ -1,6 +1,9 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views  # Импортируем auth_views для стандартных представлени
 from . import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
+
 
 urlpatterns = [
     path('', views.cti_list, name='cti_list'),
@@ -15,6 +18,14 @@ urlpatterns = [
 
 
     # Стандартные URL для входа и выхода
-    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout')
+    path('accounts/logout/', LogoutView.as_view(next_page="/"), name='logout'),
+    path('accounts/login/', LoginView.as_view(), name='login'),
+    path('accounts/password_change/', PasswordChangeView.as_view(),
+         name='password_change'),
+    path('password_change/done/', PasswordChangeDoneView.as_view(), name='password_change_done'),
+
+    # jwt auth
+    path("api/token/get", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    # path("api/token/refresh", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/token/verify", TokenVerifyView.as_view(), name="token_verify"),
 ]

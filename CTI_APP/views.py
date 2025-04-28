@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import CtiLog, BlackListIP, BlackListURL
 from .forms import CtiLogForm, CtiLogSearchForm
@@ -6,7 +5,6 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 import csv
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 
 
 # Представление для списка записей с поиском и пагинацией

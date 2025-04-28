@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-$^tyqiw1e)*r!@n!zmi%y6mkqf29!ao-)^#y2znhuzm%0t5h@w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,6 +36,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #requirements
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+
+    'ninja_jwt',
+    'ninja_extra',
+
+    #
     'CTI_APP',
 ]
 
@@ -126,7 +136,11 @@ else:
         os.path.join(BASE_DIR, 'static'),
     ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 
+if not os.path.exists(MEDIA_ROOT):
+    os.makedirs(MEDIA_ROOT)
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
